@@ -107,8 +107,24 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# 1. Tells Django where your local custom static files are stored
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+
+# 2. Tells Django where to collect ALL files during the Render build
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# 3. Tells WhiteNoise to compress and serve the files efficiently
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
