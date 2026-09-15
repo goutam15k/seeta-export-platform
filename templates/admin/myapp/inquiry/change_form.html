@@ -1,0 +1,16 @@
+{% extends "admin/change_form.html" %}
+
+{% block submit_buttons_bottom %}
+    {{ block.super }}
+    {% if original %}
+        <!-- Custom Send Quotation Button Section -->
+        <div class="submit-row" style="background: transparent; text-align: left; padding: 15px 0; border: none;">
+            <a href="{% url 'admin:myapp_inquiry_send_quote' original.pk %}" class="button" style="background-color: #28a745; color: white; padding: 10px 20px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 14px;">
+                Send Quotation Email & Update Status
+            </a>
+            <span style="margin-left: 10px; color: #666; font-size: 13px;">
+                (Saves prices, sends email to client, and sets status to 'Quoted')
+            </span>
+        </div>
+    {% endif %}
+{% endblock %}

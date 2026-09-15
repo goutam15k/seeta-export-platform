@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Start Hero Section -->
+<div class="hero">
+    <div class="container">
+        <div class="row justify-content-between">
+            <div class="col-lg-12">
+                <div class="intro-excerpt">
+                    <h1>{{ product.name }}</h1>
+                    <p class="mb-0"><a href="{% url 'shop' %}" class="text-white">&larr; Back to Shop</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Hero Section -->
+
+<div class="untree_co-section">
+    <div class="container">
+        <div class="row">
+            
+            <!-- Left Column: Images -->
+            <div class="col-md-6 mb-5 mb-md-0">
+                
+                <!-- Main Image (Notice the id="mainImage") -->
+                {% if product.image_1 %}
+                    <img id="mainImage" src="{{ product.image_1.url }}" alt="{{ product.name }}" class="img-fluid rounded mb-4" style="width: 100%; object-fit: cover; background-color: #f8f9fa;">
+                {% endif %}
+                
+                <!-- Thumbnail Images -->
+                <div class="row">
+                    <!-- I added the 1st image here too, so users can click back to the original image! -->
+                    {% if product.image_1 %}
+                    <div class="col"><img src="{{ product.image_1.url }}" class="img-fluid rounded border" onclick="changeImage(this.src)" style="aspect-ratio: 1; object-fit: cover; cursor: pointer;"></div>
+                    {% endif %}
+
+                    {% if product.image_2 %}
+                    <div class="col"><img src="{{ product.image_2.url }}" class="img-fluid rounded border" onclick="changeImage(this.src)" style="aspect-ratio: 1; object-fit: cover; cursor: pointer;"></div>
+                    {% endif %}
+                    
+                    {% if product.image_3 %}
+                    <div class="col"><img src="{{ product.image_3.url }}" class="img-fluid rounded border" onclick="changeImage(this.src)" style="aspect-ratio: 1; object-fit: cover; cursor: pointer;"></div>
+                    {% endif %}
+                    
+                    {% if product.image_4 %}
+                    <div class="col"><img src="{{ product.image_4.url }}" class="img-fluid rounded border" onclick="changeImage(this.src)" style="aspect-ratio: 1; object-fit: cover; cursor: pointer;"></div>
+                    {% endif %}
+                    
+                    {% if product.image_5 %}
+                    <div class="col"><img src="{{ product.image_5.url }}" class="img-fluid rounded border" onclick="changeImage(this.src)" style="aspect-ratio: 1; object-fit: cover; cursor: pointer;"></div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Right Column: Product Info -->
+            <div class="col-md-6 pl-md-5">
+                <h2 class="text-black mb-2">{{ product.name }}</h2>
+                <p class="text-muted mb-4">Item Code: {{ product.unique_code }}</p>
+                
+                <h3 class="text-primary mb-4">${{ product.cpm }}</h3>
+                
+                <ul class="list-unstyled custom-list my-4">
+                    <li><strong>Category:</strong> {{ product.main_category.name }} {% if product.sub_category %}/ {{ product.sub_category.name }}{% endif %}</li>
+                    <li><strong>Dimensions:</strong> {{ product.dimensions }}</li>
+                </ul>
+                
+                <p class="mb-5">{{ product.description }}</p>
+                
+                <div class="d-flex align-items-center mb-4 pt-2">
+                    <a href="{% url 'add_to_cart' product.unique_code %}" class="btn btn-black btn-lg">Add to Cart</a>
+                </div>
+                
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Image Swapping -->
+<script>
+    function changeImage(newSrc) {
+        // Find the main image by its ID and change its source to the clicked thumbnail's source
+        document.getElementById('mainImage').src = newSrc;
+    }
+</script>
+{% endblock %}

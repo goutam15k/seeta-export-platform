@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Start Hero Section -->
+<div class="hero">
+    <div class="container">
+        <div class="row justify-content-between">
+            <div class="col-lg-5">
+                <div class="intro-excerpt">
+                    <h1>Shop</h1>
+                </div>
+            </div>
+            <div class="col-lg-7"></div>
+        </div>
+    </div>
+</div>
+<!-- End Hero Section -->
+
+<div class="untree_co-section product-section before-footer-section">
+    <div class="container">
+        
+        <!-- Search & Filter Form -->
+        <div class="row mb-5 justify-content-center">
+            <div class="col-md-8">
+                <form method="GET" action="{% url 'shop' %}" class="d-flex align-items-center">
+                    
+                    <!-- Text Search -->
+                    <input type="text" name="q" class="form-control me-2" placeholder="Search by name or code..." value="{{ search_query }}">
+                    
+                    <!-- Category Dropdown -->
+                    <select name="category" class="form-control me-2" style="max-width: 250px;">
+                        <option value="">All Categories</option>
+                        {% for cat in categories %}
+                            <option value="{{ cat.id }}" {% if category_id == cat.id|stringformat:"s" %}selected{% endif %}>
+                                {{ cat.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-black">Filter</button>
+                    
+                    <!-- Clear Button (Visible only when filters are applied) -->
+                    {% if search_query or category_id %}
+                        <a href="{% url 'shop' %}" class="btn btn-outline-black ms-2">Clear</a>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Start Django For Loop -->
+            {% for product in products %}
+            <div class="col-12 col-md-4 col-lg-3 mb-5">
+                <a class="product-item" href="{% url 'product_detail' product.unique_code %}">
+                    
+                    <!-- Display Main Image or Fallback -->
+                    {% if product.image_1 %}
+                        <img src="{{ product.image_1.url }}" class="img-fluid product-thumbnail" alt="{{ product.name }}">
+                    {% else %}
+                        <img src="{% static 'images/product-1.png' %}" class="img-fluid product-thumbnail">
+                    {% endif %}
+                    
+                    <!-- Product Details -->
+                    <h3 class="product-title">{{ product.name }}</h3>
+                    <strong class="product-price">${{ product.cpm }}</strong>
+
+                    <span class="icon-cross">
+                        <img src="{% static 'images/cross.svg' %}" class="img-fluid">
+                    </span>
+                </a>
+            </div> 
+            
+            {% empty %}
+            <!-- Fallback if no products match or exist -->
+            <div class="col-12 text-center py-5">
+                <h3>No products found!</h3>
+                <p>Try adjusting your search or category filters.</p>
+            </div>
+            {% endfor %}
+            <!-- End Django For Loop -->
+
+        </div>
+    </div>
+</div>
+{% endblock %}

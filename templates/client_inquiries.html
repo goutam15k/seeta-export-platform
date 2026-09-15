@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Start Hero Section -->
+<div class="hero">
+    <div class="container">
+        <div class="row justify-content-between">
+            <div class="col-lg-5">
+                <div class="intro-excerpt">
+                    <h1>My Quote Inquiries</h1>
+                    <p class="mb-0 text-white-50">Track your custom quote requests and review assigned pricing.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Hero Section -->
+
+<div class="untree_co-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                
+                {% for inquiry in inquiries %}
+                <div class="card mb-4 shadow-sm border-0">
+                    <div class="card-header bg-light d-flex justify-content-between align-items-center py-3">
+                        <div>
+                            <strong class="text-black">Inquiry #{{ inquiry.id }}</strong>
+                            <span class="text-muted ms-3 font-monospace small">Submitted on: {{ inquiry.created_at|date:"F d, Y - H:i" }}</span>
+                        </div>
+                        <div>
+                            <!-- Status Badges -->
+                            {% if inquiry.status == 'Pending' %}
+                                <span class="badge bg-warning text-dark px-3 py-2">Pending Review</span>
+                            {% elif inquiry.status == 'Quoted' %}
+                                <span class="badge bg-success px-3 py-2">Quote Sent</span>
+                            {% else %}
+                                <span class="badge bg-secondary px-3 py-2">Closed</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Product Name</th>
+                                        <th>Item Code</th>
+                                        <th>Quantity</th>
+                                        <th>Quoted Unit Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in inquiry.items.all %}
+                                    <tr>
+                                        <td>{{ item.product_name_snapshot }}</td>
+                                        <td class="text-muted">{{ item.product_code_snapshot }}</td>
+                                        <td>{{ item.quantity }}</td>
+                                        <td>
+                                            {% if item.quoted_price %}
+                                                <strong class="text-primary">${{ item.quoted_price }}</strong>
+                                            {% else %}
+                                                <span class="text-muted italic">Pending evaluation</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Footer of Card: Total & Admin Notes -->
+                        <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+                            <div>
+                                {% if inquiry.admin_notes %}
+                                    <small class="text-muted"><strong>Sales Note:</strong> {{ inquiry.admin_notes }}</small>
+                                {% else %}
+                                    <small class="text-muted">Our team is reviewing your material requirements.</small>
+                                {% endif %}
+                            </div>
+                            <div>
+                                {% if inquiry.total_quoted_price > 0 %}
+                                    <h5 class="text-black mb-0">Estimated Total: <span class="text-primary">${{ inquiry.total_quoted_price }}</span></h5>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center py-5">
+                    <h3 class="h5 text-muted">You haven't submitted any quote inquiries yet.</h3>
+                    <a href="{% url 'shop' %}" class="btn btn-black mt-3">Browse Products & Build Cart</a>
+                </div>
+                {% endfor %}
+                
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

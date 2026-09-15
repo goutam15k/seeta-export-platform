@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Start Hero Section -->
+<div class="hero">
+    <div class="container">
+        <div class="row justify-content-between">
+            <div class="col-lg-5">
+                <div class="intro-excerpt">
+                    <h1>Your Cart</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Hero Section -->
+
+<div class="untree_co-section before-footer-section">
+    <div class="container">
+        <div class="row mb-5">
+            <form class="col-md-12" method="post">
+                {% csrf_token %}
+                <div class="site-blocks-table">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="product-thumbnail">Image</th>
+                                <th class="product-name">Product</th>
+                                <th class="product-quantity">Quantity</th>
+                                <th class="product-remove">Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in cart_items %}
+                        <tr>
+                            <td class="product-thumbnail">
+                                {% if item.product.image_1 %}
+                                    <img src="{{ item.product.image_1.url }}" alt="Image" class="img-fluid">
+                                {% else %}
+                                    <img src="{% static 'images/product-1.png' %}" alt="Image" class="img-fluid">
+                                {% endif %}
+                            </td>
+                            <td class="product-name">
+                                <h2 class="h5 text-black">{{ item.product.name }}</h2>
+                                <small class="text-muted">Code: {{ item.product.unique_code }}</small>
+                            </td>
+                            <td>
+                                <div class="input-group mb-3 d-flex align-items-center justify-content-center" style="max-width: 120px; margin: 0 auto;">
+                                    <!-- Changed to a number input with a dynamic name -->
+                                    <input type="number" class="form-control text-center quantity-amount" name="quantity_{{ item.id }}" value="{{ item.quantity }}" min="1">
+                                </div>
+                            </td>
+                            <!-- Updated the Remove link -->
+                            <td><a href="{% url 'remove_from_cart' item.id %}" class="btn btn-black btn-sm">X</a></td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center py-5">
+                                <h3 class="h5">Your cart is currently empty.</h3>
+                                <a href="{% url 'shop' %}" class="btn btn-black mt-3">Return to Shop</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Added Update Button -->
+            {% if cart_items %}
+            <div class="row mt-3 mb-5">
+                <div class="col-md-12 text-right">
+                    <button type="submit" class="btn btn-outline-black btn-sm">Update Quantities</button>
+                </div>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+
+        <!-- Inquiry Section -->
+        {% if cart_items %}
+        <div class="row justify-content-end">
+            <div class="col-md-5">
+                <div class="p-4 border">
+                    <h3 class="text-black h4 text-uppercase mb-4">Request Quote</h3>
+                    <p class="mb-4">Because pricing depends on specific materials and finishes, please submit your cart as an inquiry. We will contact you shortly with a customized quote.</p>
+                    <a href="{% url 'send_inquiry' %}" class="btn btn-black btn-lg py-3 btn-block">Send Inquiry to Sales</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

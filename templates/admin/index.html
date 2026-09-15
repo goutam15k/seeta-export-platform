@@ -1,0 +1,38 @@
+{% extends "admin/index.html" %}
+{% load static %}
+
+<!-- Keep single-column layout with sidebar removed -->
+{% block coltype %}colM{% endblock %}
+{% block sidebar %}
+{% endblock %}
+
+{% block content %}
+<!-- Dashboard Analytics Summary Cards -->
+<div class="dashboard-metrics" style="display: flex; gap: 20px; margin-bottom: 30px;">
+    
+    <!-- Card 1: Active Products -->
+    <div style="background: #fff; border: 1px solid #d8d8d8; padding: 20px; border-radius: 6px; flex: 1; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+        <h3 style="margin: 0 0 10px 0; font-size: 13px; color: #666; text-transform: uppercase; letter-spacing: 0.5px;">Active Products</h3>
+        <p style="margin: 0; font-size: 32px; font-weight: bold; color: #333;">{{ total_active_products }}</p>
+        <a href="{% url 'admin:myapp_product_changelist' %}" style="font-size: 12px; color: #417690; text-decoration: none; display: inline-block; margin-top: 10px; font-weight: bold;">Manage Inventory &rarr;</a>
+    </div>
+    
+    <!-- Card 2: Pending Inquiries -->
+    <div style="background: #fff; border: 1px solid #d8d8d8; padding: 20px; border-radius: 6px; flex: 1; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+        <h3 style="margin: 0 0 10px 0; font-size: 13px; color: #ba2121; text-transform: uppercase; letter-spacing: 0.5px;">Pending Inquiries</h3>
+        <p style="margin: 0; font-size: 32px; font-weight: bold; color: #ba2121;">{{ pending_inquiries }}</p>
+        <a href="{% url 'admin:myapp_inquiry_changelist' %}" style="font-size: 12px; color: #417690; text-decoration: none; display: inline-block; margin-top: 10px; font-weight: bold;">Review Quotes &rarr;</a>
+    </div>
+    
+    <!-- Card 3: Unverified Users -->
+    <div style="background: #fff; border: 1px solid #d8d8d8; padding: 20px; border-radius: 6px; flex: 1; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+        <h3 style="margin: 0 0 10px 0; font-size: 13px; color: #e65100; text-transform: uppercase; letter-spacing: 0.5px;">Unverified Users</h3>
+        <p style="margin: 0; font-size: 32px; font-weight: bold; color: #e65100;">{{ unverified_users }}</p>
+        <a href="{% url 'admin:myapp_customuser_changelist' %}" style="font-size: 12px; color: #417690; text-decoration: none; display: inline-block; margin-top: 10px; font-weight: bold;">Approve Access &rarr;</a>
+    </div>
+
+</div>
+
+<!-- Render standard Django admin app index lists below the cards -->
+{{ block.super }}
+{% endblock %}
