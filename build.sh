@@ -1,28 +1,13 @@
-databases:
-  - name: seetadb
-    databaseName: seeta
-    user: seeta_user
-    plan: free
+#!/usr/bin/env bash
+# Exit on error
+set -o errexit
 
-services:
-  - type: web
-    name: seeta-export-platform
-    env: python
-    plan: free
-    buildCommand: "./build.sh"
-    startCommand: "gunicorn seeta.wsgi:application"
-    envVars:
-      - key: PYTHON_VERSION
-        value: "3.11.0"
-      - key: SECRET_KEY
-        generateValue: true
-      - key: DEBUG
-        value: "False"
-      - key: DATABASE_URL
-        fromDatabase:
-          name: seetadb
-          property: connectionString
-      - key: EMAIL_HOST_USER
-        sync: false
-      - key: EMAIL_HOST_PASSWORD
-        sync: false
+# Upgrade pip and install requirements
+pip install --upgrade pip
+pip install -r requirements.txt
+
+# Collect static files for WhiteNoise
+python manage.py collectstatic --no-input
+
+# Run database migrations
+python manage.py migrate
